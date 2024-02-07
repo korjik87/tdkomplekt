@@ -10,3 +10,8 @@
 5) php artisan key:generate
 6) php artisan migrate
 7) npm update
+
+
+## Start
+
+php artisan serve

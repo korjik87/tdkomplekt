@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Customer;
+use App\Livewire\CreateCustomer;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,4 +19,4 @@ use Illuminate\Support\Facades\Route;
 //});
 
 
-Route::get('/', Customer::class);
+Route::get('/', CreateCustomer::class);
