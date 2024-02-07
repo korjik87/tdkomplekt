@@ -9,3 +9,4 @@
 4) composer global require laravel/installer:^5.4
 5) php artisan key:generate
 6) php artisan migrate
+7) npm update
