@@ -21,6 +21,7 @@ class CreateCustomer extends Component
 
     #[Validate('required')]
     public string $name;
+    public string $checkbox;
     public string $surname;
     public string $patronymic;
     public string $email = '';
@@ -43,9 +44,16 @@ class CreateCustomer extends Component
         'birth' => 'required|date',
         'about' => 'max:1000',
 //        'files.*' => 'file|mimes:png,jpg,pdf|max:102400'
-        'files.*' => 'required|max:5|file|size:5126|mimes:png,jpg,pdf'
+        'files.*' => 'required|max:5|file|size:5126|mimes:png,jpg,pdf',
+        'checkbox' => 'required|boolean'
 
     ];
+
+    public function updated($property)
+    {
+        $this->validateOnly($property);
+    }
+
 
     public function rules(): array {
         $rules = $this->rules;

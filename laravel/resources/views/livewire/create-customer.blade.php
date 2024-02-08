@@ -1,7 +1,7 @@
 <div class="container my-2">
     <div class="row">
         <div class="col-xl-6 m-auto">
-            <form wire:submit.prevent="save">
+            <form wire:submit="save">
 
                 <div class="card shadow">
                     <div class="card-body">
@@ -13,7 +13,7 @@
 
                         <div class="form-group">
                             <label for="{{$name['name']}}">{{$name['name']}}</label>
-                            <input type="{{$name['type']}}" id="{{$name['name']}}" wire:model="{{$name['name']}}" placeholder="{{$name['name']}}" aria-describedby="{{$name['name']}}-error" aria-required="true" @error($name['name']) aria-invalid="true" @enderror class="form-control @error($name['name']) is-invalid @enderror">
+                            <input type="{{$name['type']}}" id="{{$name['name']}}" wire:model.live="{{$name['name']}}" placeholder="{{$name['name']}}" aria-describedby="{{$name['name']}}-error" aria-required="true" @error($name['name']) aria-invalid="true" @enderror class="form-control @error($name['name']) is-invalid @enderror">
                             {{-- Display name validation error message --}}
                             @error($name['name'])
                             <span id="{{$name['name']}}-error" class="text-danger">{{ $message }}</span>
@@ -28,7 +28,7 @@
                             <label >phone: </label><button type="button" class="btn btn-secondary btn-sm" onclick="addPhone()" id="add">+</button>
                             @foreach ($this->phones as $key => $item)
                             <div>
-                                <input  type="tel" id="phones{{ $key }}" wire:model="phones.{{ $key }}" placeholder="phone {{ $key }}" aria-describedby="phones.{{ $key }}-error" aria-required="true" @error('phones.'. $key ) aria-invalid="true" @enderror class="form-control @error('phones.'. $key ) is-invalid @enderror">
+                                <input  type="tel" id="phones{{ $key }}" wire:model.live="phones.{{ $key }}" placeholder="phone {{ $key }}" aria-describedby="phones.{{ $key }}-error" aria-required="true" @error('phones.'. $key ) aria-invalid="true" @enderror class="form-control @error('phones.'. $key ) is-invalid @enderror">
                             </div>
                             @error('phones.' .  $key)
                             <span id="phones.{{ $key }}-error" class="text-danger">{{ $message }}</span>
@@ -61,7 +61,7 @@
                         {{-- status --}}
                         <div class="form-group">
                             <label for="status">status:</label>
-                            <select class="form-select" id="status" aria-label="Default select example" wire:model="status" name="status">
+                            <select class="form-select" id="status" aria-label="Default select example" wire:model.live="status" name="status">
                                 <option value="none">None</option>
                                 @foreach(\App\Enums\FamilyStatusEnum::forSelect() as $name)
                                     <option value="{{$name}}">{{$name}}</option>
@@ -76,7 +76,7 @@
                         {{-- birth --}}
                         <div class="form-group">
                             <label for="birth">birth</label>
-                            <input type="date" id="birth" wire:model="birth" placeholder="birth" aria-describedby="birth-error" aria-required="true" @error('birth') aria-invalid="true" @enderror class="form-control @error('birth') is-invalid @enderror">
+                            <input type="date" id="birth" wire:model.live="birth" placeholder="birth" aria-describedby="birth-error" aria-required="true" @error('birth') aria-invalid="true" @enderror class="form-control @error('birth') is-invalid @enderror">
                             {{-- Display name validation error message --}}
                             @error('birth')
                             <span id="birth-error" class="text-danger">{{ $message }}</span>
@@ -87,7 +87,7 @@
                         {{-- files --}}
                         <div class="form-group">
                             <label for="files">files</label>
-                            <input type="file" id="files" accept="image/png, image/jpeg, application/pdf" multiple wire:model="files" placeholder="files" aria-describedby="files-error" aria-required="true" @error('files') aria-invalid="true" @enderror class="form-control @error('files') is-invalid @enderror">
+                            <input type="file" id="files" accept="image/png, image/jpeg, application/pdf" multiple wire:model.live="files" placeholder="files" aria-describedby="files-error" aria-required="true" @error('files') aria-invalid="true" @enderror class="form-control @error('files') is-invalid @enderror">
                             {{-- Display name validation error message --}}
                             @error('files')
                             <span id="files-error" class="text-danger">{{ $message }}</span>
@@ -102,7 +102,7 @@
 
                         <div class="form-group">
                             <label for="about">about</label>
-                            <textarea rows="7" id="about"  wire:model="about" onkeydown="return limitLines(this, event)" placeholder="about" aria-describedby="about-error" aria-required="true" @error('about') aria-invalid="true" @enderror class="form-control @error('about') is-invalid @enderror"></textarea>
+                            <textarea rows="7" id="about"  wire:model.live="about" onkeydown="return limitLines(this, event)" placeholder="about" aria-describedby="about-error" aria-required="true" @error('about') aria-invalid="true" @enderror class="form-control @error('about') is-invalid @enderror"></textarea>
                             {{-- Display name validation error message --}}
                             @error('about')
                             <span id="about-error" class="text-danger">{{ $message }}</span>
@@ -131,6 +131,18 @@
                             }
 
                         </script>
+
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="checkbox" wire:model.live="checkbox" aria-describedby="checkbox-error" aria-required="true" @error('checkbox') aria-invalid="true" @enderror class="form-control @error('checkbox') is-invalid @enderror">
+                            <label class="form-check-label" for="checkbox">
+                                Я ознакомился c правилами
+                            </label>
+                            @error('checkbox')
+                            <br>
+                            <span id="checkbox-error" class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
                         <br>
                         <div class="form-group mb-2">
