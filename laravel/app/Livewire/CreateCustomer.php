@@ -33,7 +33,7 @@ class CreateCustomer extends Component
 
     public function rules(): array {
         $rules = $this->rules;
-        $rules['status'] = [Rule::enum(FamilyStatusEnum::class)];
+        $rules['status'] = [new Enum(FamilyStatusEnum::class)];
         return $rules;
     }
 

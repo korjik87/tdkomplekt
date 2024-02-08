@@ -21,7 +21,17 @@
         <div>@error('birth') {{ $message }} @enderror</div>
         <br>
         <label for="title">Status:</label>
-        <input type="text" id="status" wire:model="status" >
+
+
+        <select wire:model="status">
+            <option value="none">None</option>
+            @foreach(\App\Enums\FamilyStatusEnum::forSelect() as $name)
+                <option value="{{$name}}">{{$name}}</option>
+            @endforeach
+        </select>
+
+
+        <div>Status @json($status)</div>
         <div>@error('status') {{ $message }} @enderror</div>
         <br>
         <label for="title">Phone:</label>
