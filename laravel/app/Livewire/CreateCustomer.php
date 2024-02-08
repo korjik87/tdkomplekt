@@ -7,7 +7,6 @@ use App\Models\Customer;
 use App\Models\Email;
 use App\Models\Phone;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Enum;
 use Livewire\Component;
 
 class CreateCustomer extends Component
@@ -33,7 +32,7 @@ class CreateCustomer extends Component
 
     public function rules(): array {
         $rules = $this->rules;
-        $rules['status'] = [new Enum(FamilyStatusEnum::class)];
+        $rules['status'] = [Rule::enum(FamilyStatusEnum::class)];
         return $rules;
     }
 
