@@ -37,10 +37,10 @@ class CreateCustomer extends Component
     protected array $rules = [
         'name' => 'required|min:6',
         'surname' => 'required|min:6',
-        'patronymic' => 'required|min:6',
+        'patronymic' => 'min:6',
         'email' => 'email:rfc',
         'phones' => 'array|max:5',
-        'birth' => 'date',
+        'birth' => 'required|date',
         'about' => 'max:1000',
 //        'files.*' => 'file|mimes:png,jpg,pdf|max:102400'
         'files.*' => 'required|max:5|file|size:5126|mimes:png,jpg,pdf'
