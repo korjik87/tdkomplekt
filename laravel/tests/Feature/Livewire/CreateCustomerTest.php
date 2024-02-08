@@ -20,17 +20,24 @@ class CreateCustomerTest extends TestCase
     /** @test */
     public function can_set_inputs()
     {
+        $name = fake()->firstName();
         Livewire::test(CreateCustomer::class)
-            ->set('name', 'Sergey')
-            ->assertSet('name', 'Sergey');
+            ->set('name', $name)
+            ->assertSet('name', $name);
+
+        Livewire::test(CreateCustomer::class)
+            ->set('name', $name)
+            ->assertNotSet('name', fake()->firstName());
 
     }
 
     /** @test */
     public function check_validation_rules()
     {
+
+
         Livewire::test(CreateCustomer::class)
-            ->set('name', 'Sergey')
+            ->set('name', fake()->firstName())
             ->call('save')
             ->assertHasErrors();
     }
