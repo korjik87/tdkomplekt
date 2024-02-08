@@ -26,6 +26,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer wherePatronymic($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereSurname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
+ * @property-read \App\Models\AboutMe|null $aboutMe
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerFile> $customerFiles
+ * @property-read int|null $customer_files_count
+ * @property-read \App\Models\DateOfBirth|null $dateOfBirth
+ * @property-read \App\Models\Email|null $email
+ * @property-read \App\Models\FamilyStatus|null $familyStatus
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Phone> $phones
+ * @property-read int|null $phones_count
  * @mixin \Eloquent
  */
 class Customer extends Model
@@ -39,14 +47,14 @@ class Customer extends Model
         return $this->hasOne(Email::class);
     }
 
-    public function phone(): hasMany
+    public function phones(): hasMany
     {
         return $this->hasMany(Phone::class);
     }
 
-    public function customerFile(): hasOne
+    public function customerFiles(): hasMany
     {
-        return $this->hasOne(CustomerFile::class);
+        return $this->hasMany(CustomerFile::class);
     }
 
     public function dateOfBirth(): hasOne

@@ -26,4 +26,5 @@ use Illuminate\Database\Eloquent\Model;
 class CustomerFile extends Model
 {
     use HasFactory;
+    protected $fillable = ['filename'];
 }

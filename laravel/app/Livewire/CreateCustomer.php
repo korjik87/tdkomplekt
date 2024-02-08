@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Email;
 use App\Models\Phone;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 use Livewire\Component;
 
 class CreateCustomer extends Component
@@ -18,7 +19,9 @@ class CreateCustomer extends Component
     public string $email;
     public string $birth;
     public string $status;
-    public array $phones = ['', ''];
+    public string $about;
+    public array $files;
+    public array $phones = [''];
 
 
     protected array $rules = [
@@ -26,13 +29,21 @@ class CreateCustomer extends Component
         'surname' => 'required|min:6',
         'patronymic' => 'required|min:6',
         'email' => 'email:rfc',
-        'phones' => 'array',
+        'phones' => 'array|max:5',
         'birth' => 'date',
+        'about' => 'required|max:1000',
+
     ];
 
     public function rules(): array {
         $rules = $this->rules;
         $rules['status'] = [Rule::enum(FamilyStatusEnum::class)];
+        $rules['files.*'] = 'required|array|max:5';
+
+//        $rules['files'] = ['array', 'max:5',
+//            File::types(['jpg','png','pdf'])
+//                ->max(5 * 1024),
+//        ];
         return $rules;
     }
 
@@ -57,7 +68,7 @@ class CreateCustomer extends Component
         foreach ($this->phones as $item) {
             if($item) {
                 $phone =  new Phone(['phone' =>$item]);
-                $customer->phone()->save($phone);
+                $customer->phones()->save($phone);
             }
         }
 
