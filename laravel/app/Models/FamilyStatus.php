@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\FamilyStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,7 +31,7 @@ class FamilyStatus extends Model
 
     protected $fillable = ['status'];
     protected $casts = [
-        'status' => \FamilyStatus::class,
+        'status' => FamilyStatusEnum::class,
     ];
 }
 

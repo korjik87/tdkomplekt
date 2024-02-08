@@ -2,34 +2,45 @@
 
 namespace App\Livewire;
 
+use App\Enums\FamilyStatusEnum;
 use App\Models\Customer;
 use App\Models\Email;
 use App\Models\Phone;
-use Livewire\Attributes\Rule;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 use Livewire\Component;
 
 class CreateCustomer extends Component
 {
 
-
-    #[Rule('required|min:3')]
     public string $name;
-    #[Rule('required|min:3')]
     public string $surname;
-    #[Rule('required|min:3')]
     public string $patronymic;
-
-    #[Rule('email:rfc')]
     public string $email;
-
-    #[Rule('array')]
+    public string $birth;
+    public string $status;
     public array $phones = ['', ''];
+
+
+    protected array $rules = [
+        'name' => 'required|min:6',
+        'surname' => 'required|min:6',
+        'patronymic' => 'required|min:6',
+        'email' => 'email:rfc',
+        'phones' => 'array',
+        'birth' => 'date',
+    ];
+
+    public function rules(): array {
+        $rules = $this->rules;
+        $rules['status'] = [Rule::enum(FamilyStatusEnum::class)];
+        return $rules;
+    }
 
     public function save()
     {
-//        $customer = Customer::create([
-//            'email' => $this->email
-//        ]);
+        $this->validate($this->rules());
+
 
         $customer = Customer::create([
             'name' => $this->name,
@@ -37,13 +48,18 @@ class CreateCustomer extends Component
             'patronymic' => $this->patronymic
         ]);
 
-        $email =  new Email(['email' =>$this->email]);
-        $customer->email()->save($email);
+        if($this->email) {
+            $email =  new Email(['email' =>$this->email]);
+            $customer->email()->save($email);
+        }
+
 
 
         foreach ($this->phones as $item) {
-            $phone =  new Phone(['phone' =>$item]);
-            $customer->phone()->save($phone);
+            if($item) {
+                $phone =  new Phone(['phone' =>$item]);
+                $customer->phone()->save($phone);
+            }
         }
 
 

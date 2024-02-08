@@ -26,4 +26,8 @@ use Illuminate\Database\Eloquent\Model;
 class DateOfBirth extends Model
 {
     use HasFactory;
+    protected $fillable = ['birth'];
+    protected $casts = [
+        'birth' => 'datetime:Y-m-d',
+    ];
 }
