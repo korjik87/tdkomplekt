@@ -29,7 +29,7 @@ class CreateCustomer extends Component
     public string $about;
 //    #[Validate(['files.*' => 'required|max:5|file|size:5126|mimes:png,jpg,pdf'])]
     public $files = [];
-    public array $phones = [''];
+    public array $phones = ['', '', '', '', ''];
 
 
     public $title = 'Create сustomer...';

@@ -23,15 +23,38 @@
                         @endforeach
 
                         {{-- phones --}}
-                        @foreach ($this->phones as $key => $item)
+
                         <div class="form-group">
-                            <label for="phones{{ $key }}">phone:</label>
-                            <input type="text" id="phones.{{ $key }}" wire:model="phones.{{ $key }}" placeholder="phone {{ $key }}" aria-describedby="phones.{{ $key }}-error" aria-required="true" @error('phones.'. $key ) aria-invalid="true" @enderror class="form-control @error('phones.'. $key ) is-invalid @enderror">
+                            <label >phone: </label><button type="button" class="btn btn-secondary btn-sm" onclick="addPhone()" id="add">+</button>
+                            @foreach ($this->phones as $key => $item)
+                            <div>
+                                <input  type="tel" id="phones{{ $key }}" wire:model="phones.{{ $key }}" placeholder="phone {{ $key }}" aria-describedby="phones.{{ $key }}-error" aria-required="true" @error('phones.'. $key ) aria-invalid="true" @enderror class="form-control @error('phones.'. $key ) is-invalid @enderror">
+                            </div>
                             @error('phones.' .  $key)
-                            <span id="phones{{ $key }}-error" class="text-danger">{{ $message }}</span>
+                            <span id="phones.{{ $key }}-error" class="text-danger">{{ $message }}</span>
                             @enderror
+                            @endforeach
                         </div>
-                        @endforeach
+                        <script>
+                            let countPhone = 0;
+                            const options = {
+                                onlyCountries: ["ru", "by"],
+                                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.16/build/js/utils.js",
+                            };
+                            window.intlTelInput(document.getElementById("phones0"), options);
+                            function addPhone() {
+                                if(countPhone < 4) {
+                                    const el = document.getElementById("phones" + ++countPhone);
+                                    el.style.display = 'block'
+                                    window.intlTelInput(el, options)
+                                } else {
+                                    document.getElementById("add").disabled = true;
+                                }
+
+                            }
+                            document.querySelectorAll("#phones1, #phones2, #phones3, #phones4").forEach(e => e.style.display = 'none')
+                        </script>
+
 
 
 
@@ -53,7 +76,7 @@
                         {{-- birth --}}
                         <div class="form-group">
                             <label for="birth">birth</label>
-                            <input type="text" id="birth" wire:model="birth" placeholder="birth" aria-describedby="birth-error" aria-required="true" @error('birth') aria-invalid="true" @enderror class="form-control @error('birth') is-invalid @enderror">
+                            <input type="date" id="birth" wire:model="birth" placeholder="birth" aria-describedby="birth-error" aria-required="true" @error('birth') aria-invalid="true" @enderror class="form-control @error('birth') is-invalid @enderror">
                             {{-- Display name validation error message --}}
                             @error('birth')
                             <span id="birth-error" class="text-danger">{{ $message }}</span>
@@ -63,7 +86,7 @@
 
                         {{-- files --}}
                         <div class="form-group">
-                            <label for="files">birth</label>
+                            <label for="files">files</label>
                             <input type="file" id="files" accept="image/png, image/jpeg, application/pdf" multiple wire:model="files" placeholder="files" aria-describedby="files-error" aria-required="true" @error('files') aria-invalid="true" @enderror class="form-control @error('files') is-invalid @enderror">
                             {{-- Display name validation error message --}}
                             @error('files')
@@ -79,13 +102,35 @@
 
                         <div class="form-group">
                             <label for="about">about</label>
-                            <textarea wire:model="about" placeholder="about" aria-describedby="about-error" aria-required="true" @error('about') aria-invalid="true" @enderror class="form-control @error('about') is-invalid @enderror"></textarea>
+                            <textarea rows="7" id="about"  wire:model="about" onkeydown="return limitLines(this, event)" placeholder="about" aria-describedby="about-error" aria-required="true" @error('about') aria-invalid="true" @enderror class="form-control @error('about') is-invalid @enderror"></textarea>
                             {{-- Display name validation error message --}}
                             @error('about')
                             <span id="about-error" class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
+                        <script>
+                            const about = document.getElementById('about');
+                            let maxHeight = about.getBoundingClientRect().height;
+                            about.style.maxHeight  = maxHeight + 'px';
+                            about.rows  = 2;
+                            function limitLines(obj, e) {
+                                let keynum, lines = obj.value.split('\n').length;
+
+                                // IE
+                                if(window.event) {
+                                    keynum = e.keyCode;
+                                    // Netscape/Firefox/Opera
+                                } else if(e.which) {
+                                    keynum = e.which;
+                                }
+
+                                if(keynum === 13 && lines === 7) {
+                                    return false;
+                                }
+                            }
+
+                        </script>
 
                         <br>
                         <div class="form-group mb-2">
