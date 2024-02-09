@@ -55,6 +55,14 @@ class CreateCustomer extends Component
     }
 
 
+    public function updatedFiles()
+    {
+        $this->dispatch('updatedFiles');
+        $this->validate($this->rules());
+
+        // here you can store immediately on any change of the property
+    }
+
     public function rules(): array {
         $rules = $this->rules;
         $rules['status'] = [Rule::enum(FamilyStatusEnum::class)];

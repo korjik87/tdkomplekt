@@ -79,6 +79,7 @@
                             initPhone();
                             window.addEventListener('contentChangedPhone', initPhone);
                             window.addEventListener('saveCustomer', initPhone);
+                            window.addEventListener('updatedFiles', initPhone);
                         </script>
 
 
@@ -108,6 +109,9 @@
                             <span id="birth-error" class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+
+
+
 
 
                         {{-- files --}}
@@ -149,6 +153,7 @@
 
                             ihitAbout();
                             window.addEventListener('saveCustomer', ihitAbout);
+                            window.addEventListener('updatedFiles', ihitAbout);
 
 
                             function limitLines(obj, e) {
