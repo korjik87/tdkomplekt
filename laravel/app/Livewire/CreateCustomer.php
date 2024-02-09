@@ -20,14 +20,14 @@ class CreateCustomer extends Component
     use WithFileUploads;
 
     #[Validate('required')]
-    public string $name;
+    public string $name = '';
     public string $checkbox;
-    public string $surname;
-    public string $patronymic;
+    public string $surname = '';
+    public string $patronymic = '';
     public string $email = '';
     public string $birth;
-    public string $status;
-    public string $about;
+    public string $status = '';
+    public string $about = '';
 //    #[Validate(['files.*' => 'required|max:5|file|size:5126|mimes:png,jpg,pdf'])]
     public $files = [];
     public array $phones = [''];
@@ -63,6 +63,7 @@ class CreateCustomer extends Component
     }
 
     public function addPhone(): void {
+        $this->dispatch('contentChangedPhone', ['item' => $this->phones]);
         count($this->phones) < 5? $this->phones[] = '' :'';
     }
 
@@ -71,25 +72,21 @@ class CreateCustomer extends Component
         $this->validate($this->rules());
 
 
-        $customer = Customer::create([
-            'name' => $this->name,
-            'surname' => $this->surname,
-            'patronymic' => $this->patronymic
-        ]);
+        $customer = Customer::create($this->only(['name', 'surname', 'patronymic']));
 
         if($this->email) {
-            $email =  new Email(['email' =>$this->email]);
+            $email =  new Email($this->only(['email']));
             $customer->email()->save($email);
         }
 
 
-
+        $phones = [];
         foreach ($this->phones as $item) {
             if($item) {
-                $phone =  new Phone(['phone' =>$item]);
-                $customer->phones()->save($phone);
+                $phones[] =  new Phone($this->only(['phone']));
             }
         }
+        $customer->phones()->saveMany($phones);
 
 
 

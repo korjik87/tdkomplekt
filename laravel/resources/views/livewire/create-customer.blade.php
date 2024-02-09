@@ -1,8 +1,7 @@
 <div class="container my-2">
     <div class="row">
         <div class="col-xl-6 m-auto">
-            <form wire:submit="save">
-
+            <form wire:submit="save" x-data="{ submit: false, about: '{{$about}}', surname: '{{$surname}}', patronymic: '{{$patronymic}}', email: '{{$email}}'}">
                 <div class="card shadow">
                     <div class="card-body">
 
@@ -13,7 +12,7 @@
 
                         <div class="form-group">
                             <label for="{{$name['name']}}">{{$name['name']}}</label>
-                            <input type="{{$name['type']}}" id="{{$name['name']}}" wire:model="{{$name['name']}}" placeholder="{{$name['name']}}" aria-describedby="{{$name['name']}}-error" aria-required="true" @error($name['name']) aria-invalid="true" @enderror class="form-control @error($name['name']) is-invalid @enderror">
+                            <input  type="{{$name['type']}}" id="{{$name['name']}}" wire:model="{{$name['name']}}" placeholder="{{$name['name']}}" aria-describedby="{{$name['name']}}-error" aria-required="true" @error($name['name']) aria-invalid="true" @enderror class="form-control @error($name['name']) is-invalid @enderror">
                             {{-- Display name validation error message --}}
                             @error($name['name'])
                             <span id="{{$name['name']}}-error" class="text-danger">{{ $message }}</span>
@@ -35,25 +34,18 @@
                             @enderror
                             @endforeach
                         </div>
-{{--                        <script>--}}
-{{--                            let countPhone = 0;--}}
-{{--                            const options = {--}}
-{{--                                onlyCountries: ["ru", "by"],--}}
-{{--                                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.16/build/js/utils.js",--}}
-{{--                            };--}}
-{{--                            window.intlTelInput(document.getElementById("phones0"), options);--}}
-{{--                            function addPhone() {--}}
-{{--                                if(countPhone < 4) {--}}
-{{--                                    const el = document.getElementById("phones" + ++countPhone);--}}
-{{--                                    el.style.display = 'block'--}}
-{{--                                    window.intlTelInput(el, options)--}}
-{{--                                } else {--}}
-{{--                                    document.getElementById("add").disabled = true;--}}
-{{--                                }--}}
-
-{{--                            }--}}
-{{--                            document.querySelectorAll("#phones1, #phones2, #phones3, #phones4").forEach(e => e.style.display = 'none')--}}
-{{--                        </script>--}}
+                        <script>
+                            const options = {
+                                onlyCountries: ["ru", "by"],
+                                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.16/build/js/utils.js",
+                            };
+                            function initPhone() {
+                                setTimeout(() => document.querySelectorAll("#phones0, #phones1, #phones2, #phones3, #phones4")
+                                    .forEach(e => window.intlTelInput(e, options)), 0);
+                            }
+                            initPhone();
+                            window.addEventListener('contentChangedPhone', initPhone);
+                        </script>
 
 
 
@@ -102,7 +94,7 @@
 
                         <div class="form-group">
                             <label for="about">about</label>
-                            <textarea rows="7" id="about"  wire:model="about" onkeydown="return limitLines(this, event)" placeholder="about" aria-describedby="about-error" aria-required="true" @error('about') aria-invalid="true" @enderror class="form-control @error('about') is-invalid @enderror"></textarea>
+                            <textarea  x-model="about" rows="7" id="about"  wire:model="about" onkeydown="return limitLines(this, event)" placeholder="about" aria-describedby="about-error" aria-required="true" @error('about') aria-invalid="true" @enderror class="form-control @error('about') is-invalid @enderror"></textarea>
                             {{-- Display name validation error message --}}
                             @error('about')
                             <span id="about-error" class="text-danger">{{ $message }}</span>
@@ -134,7 +126,7 @@
 
 
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checkbox" wire:model="checkbox" aria-describedby="checkbox-error" aria-required="true" @error('checkbox') aria-invalid="true" @enderror class="form-control @error('checkbox') is-invalid @enderror">
+                            <input x-model="submit" class="form-check-input" type="checkbox" value="" id="checkbox" wire:model="checkbox" aria-describedby="checkbox-error" aria-required="true" @error('checkbox') aria-invalid="true" @enderror class="form-control @error('checkbox') is-invalid @enderror">
                             <label class="form-check-label" for="checkbox">
                                 Я ознакомился c правилами
                             </label>
@@ -146,7 +138,7 @@
 
                         <br>
                         <div class="form-group mb-2">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary" x-bind:disabled="!submit">Submit</button>
                         </div>
 
                     </div>
