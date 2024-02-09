@@ -29,7 +29,7 @@ class CreateCustomer extends Component
     public string $status = '';
     public string $about = '';
 //    #[Validate(['files.*' => 'required|max:5|file|size:5126|mimes:png,jpg,pdf'])]
-    public $files = [];
+    public $files;
     public array $phones = [''];
 
 
@@ -39,7 +39,7 @@ class CreateCustomer extends Component
         'name' => 'required|min:6',
         'surname' => 'required|min:6',
         'patronymic' => 'min:6',
-        'email' => 'required_without:phones|email',
+        'email' => 'required_without:phones.*|email',
         'phones.*' => 'required_without:email|max:20',
         'birth' => 'required|date',
         'about' => 'max:1000',

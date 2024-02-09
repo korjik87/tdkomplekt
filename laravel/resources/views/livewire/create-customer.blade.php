@@ -5,36 +5,57 @@
                 <div class="card shadow">
                     <div class="card-body">
 
-                        {{-- name, surname, patronymic, email --}}
-
-                        @foreach([['name' => 'name', 'type' => 'text'], ['name' => 'surname', 'type' => 'text'],
-['name' => 'patronymic', 'type' => 'text'], ['name' => 'email', 'type' => 'email'], ] as $name)
-
+                        {{--  name --}}
                         <div class="form-group">
-                            <label for="{{$name['name']}}">{{$name['name']}}</label>
-                            <input  type="{{$name['type']}}" id="{{$name['name']}}" wire:model="{{$name['name']}}" placeholder="{{$name['name']}}" aria-describedby="{{$name['name']}}-error" aria-required="true" @error($name['name']) aria-invalid="true" @enderror class="form-control @error($name['name']) is-invalid @enderror">
+                            <label for="name">name</label>
+                            <input  type="text" id="name" wire:model="name" placeholder="name" aria-describedby="name-error" aria-required="true" @error('name') aria-invalid="true" @enderror class="form-control @error('name') is-invalid @enderror">
                             {{-- Display name validation error message --}}
-                            @error($name['name'])
-                            <span id="{{$name['name']}}-error" class="text-danger">{{ $message }}</span>
+                            @error('name')
+                            <span id="name-error" class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
-                        @endforeach
 
 
 
+                        {{-- surname --}}
                         <div class="form-group">
-                            <label for="{{$email}}">email</label>
-                            <input  type="email" id="{{$email}}" wire:model="{{$email}}" placeholder="email" aria-describedby="{{$email}}-error" aria-required="true" @error($email) aria-invalid="true" @enderror class="form-control @error($email) is-invalid @enderror">
+                            <label for="surname">surname</label>
+                            <input  type="text" id="surname" wire:model="surname" placeholder="surname" aria-describedby="surname-error" aria-required="true" @error('surname') aria-invalid="true" @enderror class="form-control @error('surname') is-invalid @enderror">
                             {{-- Display name validation error message --}}
-                            @error($email)
-                            <span id="{{$email}}-error" class="text-danger">{{ $message }}</span>
+                            @error('surname')
+                            <span id="surname-error" class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+
+
+
+                        {{-- patronymic --}}
+                        <div class="form-group">
+                            <label for="patronymic">patronymic</label>
+                            <input  type="text" id="patronymic" wire:model="patronymic" placeholder="patronymic" aria-describedby="patronymic-error" aria-required="true" @error('patronymic') aria-invalid="true" @enderror class="form-control @error('patronymic') is-invalid @enderror">
+                            {{-- Display name validation error message --}}
+                            @error('patronymic')
+                            <span id="patronymic-error" class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+
+
+
+                        {{-- email --}}
+                        <div class="form-group">
+                            <label for="email">email</label>
+                            <input  type="email" id="email" wire:model="email" placeholder="email" aria-describedby="email-error" aria-required="true" @error('email') aria-invalid="true" @enderror class="form-control @error('email') is-invalid @enderror">
+                            {{-- Display name validation error message --}}
+                            @error('email')
+                            <span id="email-error" class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
 
                         {{-- phones --}}
-
                         <div class="form-group">
                             <label >phone: </label><button type="button" class="btn btn-secondary btn-sm" wire:click="addPhone" id="add">+</button>
                             @foreach ($this->phones as $key => $item)
@@ -92,7 +113,7 @@
                         {{-- files --}}
                         <div class="form-group">
                             <label for="files">files</label>
-                            <input type="file" id="files" accept="image/png, image/jpeg, application/pdf" multiple wire:model="files" placeholder="files" aria-describedby="files-error" aria-required="true" @error('files') aria-invalid="true" @enderror class="form-control @error('files') is-invalid @enderror">
+                            <input wire:model="files" type="file" id="files" accept="image/png, image/jpeg, application/pdf" multiple  placeholder="files" aria-describedby="files-error" aria-required="true" @error('files') aria-invalid="true" @enderror class="form-control @error('files') is-invalid @enderror">
                             {{-- Display name validation error message --}}
                             @error('files')
                             <span id="files-error" class="text-danger">{{ $message }}</span>
