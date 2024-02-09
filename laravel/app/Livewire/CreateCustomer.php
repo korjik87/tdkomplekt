@@ -39,7 +39,7 @@ class CreateCustomer extends Component
         'name' => 'required|min:6',
         'surname' => 'required|min:6',
         'patronymic' => 'min:6',
-        'email' => 'required_without:phones.*|email',
+        'email' => 'required_without:phones|email',
         'phones.*' => 'required_without:email|max:20',
         'birth' => 'required|date',
         'about' => 'max:1000',
@@ -63,12 +63,13 @@ class CreateCustomer extends Component
     }
 
     public function addPhone(): void {
-        $this->dispatch('contentChangedPhone', ['item' => $this->phones]);
+        $this->dispatch('contentChangedPhone');
         count($this->phones) < 5? $this->phones[] = '' :'';
     }
 
     public function save()
     {
+        $this->dispatch('saveCustomer');
         $this->validate($this->rules());
 
 

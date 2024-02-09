@@ -21,6 +21,18 @@
 
                         @endforeach
 
+
+
+                        <div class="form-group">
+                            <label for="{{$email}}">email</label>
+                            <input  type="email" id="{{$email}}" wire:model="{{$email}}" placeholder="email" aria-describedby="{{$email}}-error" aria-required="true" @error($email) aria-invalid="true" @enderror class="form-control @error($email) is-invalid @enderror">
+                            {{-- Display name validation error message --}}
+                            @error($email)
+                            <span id="{{$email}}-error" class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+
                         {{-- phones --}}
 
                         <div class="form-group">
@@ -45,6 +57,7 @@
                             }
                             initPhone();
                             window.addEventListener('contentChangedPhone', initPhone);
+                            window.addEventListener('saveCustomer', initPhone);
                         </script>
 
 
@@ -102,10 +115,21 @@
                         </div>
 
                         <script>
-                            const about = document.getElementById('about');
-                            let maxHeight = about.getBoundingClientRect().height;
-                            about.style.maxHeight  = maxHeight + 'px';
-                            about.rows  = 2;
+
+                            function ihitAbout() {
+                                setTimeout(() => {
+                                        const about = document.getElementById('about');
+                                        let maxHeight = about.getBoundingClientRect().height;
+                                        about.style.maxHeight  = maxHeight + 'px';
+                                        about.rows  = 2;
+                                    }
+                                )
+                            }
+
+                            ihitAbout();
+                            window.addEventListener('saveCustomer', ihitAbout);
+
+
                             function limitLines(obj, e) {
                                 let keynum, lines = obj.value.split('\n').length;
 
