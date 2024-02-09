@@ -62,6 +62,10 @@ class CreateCustomer extends Component
         return $rules;
     }
 
+    public function addPhone(): void {
+        count($this->phones) < 5? $this->phones[] = '' :'';
+    }
+
     public function save()
     {
         $this->validate($this->rules());
