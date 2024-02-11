@@ -75,7 +75,7 @@
                                     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.16/build/js/utils.js",
                                 };
                                 function initPhone() {
-                                    setTimeout(() => document.querySelectorAll("#phones0, #phones1, #phones2, #phones3, #phones4")
+                                    setTimeout(() => document.querySelectorAll("[type='tel']")
                                         .forEach(e => window.intlTelInput(e, options)), 0);
                                 }
                                 initPhone();
@@ -174,6 +174,8 @@
                                 ihitAbout();
                                 window.addEventListener('saveCustomer', ihitAbout);
                                 window.addEventListener('updatedFiles', ihitAbout);
+                                window.addEventListener('contentChangedPhone', ihitAbout);
+
 
 
                                 function limitLines(obj, e) {
