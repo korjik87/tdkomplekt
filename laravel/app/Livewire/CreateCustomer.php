@@ -3,14 +3,17 @@
 namespace App\Livewire;
 
 use App\Enums\FamilyStatusEnum;
+use App\Models\AboutMe;
 use App\Models\Customer;
 use App\Models\CustomerFile;
 use App\Models\Email;
+use App\Models\FamilyStatus;
 use App\Models\Phone;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\Renderless;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -50,12 +53,13 @@ class CreateCustomer extends Component
 
     ];
 
+    #[Renderless]
     public function updated($property)
     {
         $this->validateOnly($property);
     }
 
-
+    #[Renderless]
     public function updatedFiles()
     {
         $this->dispatch('updatedFiles');
@@ -71,11 +75,13 @@ class CreateCustomer extends Component
         return $rules;
     }
 
+    #[Renderless]
     public function addPhone(): void {
         $this->dispatch('contentChangedPhone');
         count($this->phones) < 5? $this->phones[] = '' :'';
     }
 
+    #[Renderless]
     public function save()
     {
         $this->dispatch('saveCustomer');
@@ -106,7 +112,15 @@ class CreateCustomer extends Component
             (new CustomerFile(['customer_id' => $customer->getKey()], $item))->save();
         }
 
+        if($this->about) {
+            $about =  new AboutMe($this->only(['about']));
+            $customer->aboutMe()->save($about);
+        }
 
+        if($this->status) {
+            $status =  new FamilyStatus($this->only(['status']));
+            $customer->familyStatus()->save($status);
+        }
 
 
 
