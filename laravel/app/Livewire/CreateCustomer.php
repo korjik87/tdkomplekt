@@ -28,7 +28,7 @@ class CreateCustomer extends Component
     public string $checkbox;
     public string $surname = '';
     public string $patronymic = '';
-    public string $email = '';
+    public string $email;
     public string $birth;
     public string $status = '';
     public string $about = '';
