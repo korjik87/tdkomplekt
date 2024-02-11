@@ -3,14 +3,14 @@
         <div class="col-xl-6 m-auto">
             <div id="form">
 
-                <form wire:submit="save" x-data="{ submit: false, about: '{{$about}}', surname: '{{$surname}}', patronymic: '{{$patronymic}}', email: '{{$email}}'}">
+                <form id="formId" wire:submit="save" x-validate @submit="$validate.submit" x-data="{ about: '{{$about}}', surname: '{{$surname}}', patronymic: '{{$patronymic}}', email: '{{$email}}'}">
                     <div class="card shadow">
                         <div class="card-body">
 
                             {{--  name --}}
                             <div class="form-group">
                                 <label for="name">name</label>
-                                <input  type="text" id="name" wire:model="name" placeholder="name" aria-describedby="name-error" aria-required="true" @error('name') aria-invalid="true" @enderror class="form-control @error('name') is-invalid @enderror">
+                                <input  x-validate.required type="text" id="name" wire:model="name" placeholder="name" aria-describedby="name-error" aria-required="true" @error('name') aria-invalid="true" @enderror class="form-control @error('name') is-invalid @enderror">
                                 {{-- Display name validation error message --}}
                                 @error('name')
                                 <span id="name-error" class="text-danger">{{ $message }}</span>
@@ -23,7 +23,7 @@
                             {{-- surname --}}
                             <div class="form-group">
                                 <label for="surname">surname</label>
-                                <input  type="text" id="surname" wire:model="surname" placeholder="surname" aria-describedby="surname-error" aria-required="true" @error('surname') aria-invalid="true" @enderror class="form-control @error('surname') is-invalid @enderror">
+                                <input x-validate.required type="text" id="surname" wire:model="surname" placeholder="surname" aria-describedby="surname-error" aria-required="true" @error('surname') aria-invalid="true" @enderror class="form-control @error('surname') is-invalid @enderror">
                                 {{-- Display name validation error message --}}
                                 @error('surname')
                                 <span id="surname-error" class="text-danger">{{ $message }}</span>
@@ -49,7 +49,7 @@
                             {{-- email --}}
                             <div class="form-group">
                                 <label for="email">email</label>
-                                <input  type="email" id="email" wire:model="email" placeholder="email" aria-describedby="email-error" aria-required="true" @error('email') aria-invalid="true" @enderror class="form-control @error('email') is-invalid @enderror">
+                                <input x-validate.email type="email" id="email" wire:model="email" placeholder="email" aria-describedby="email-error" aria-required="true" @error('email') aria-invalid="true" @enderror class="form-control @error('email') is-invalid @enderror">
                                 {{-- Display name validation error message --}}
                                 @error('email')
                                 <span id="email-error" class="text-danger">{{ $message }}</span>
@@ -59,7 +59,7 @@
 
                             {{-- phones --}}
                             <div class="form-group">
-                                <label >phone: </label><button type="button" class="btn btn-secondary btn-sm" wire:click="addPhone" id="add">+</button>
+                                <label x-validate.tel>phone: </label><button type="button" class="btn btn-secondary btn-sm" wire:click="addPhone" id="add">+</button>
                                 @foreach ($this->phones as $key => $item)
                                     <div>
                                         <input  type="tel" id="phones.{{ $key }}" wire:model="phones.{{ $key }}" placeholder="phone {{ $key }}" aria-describedby="phones.{{ $key }}-error" aria-required="true" @error('phones.'. $key ) aria-invalid="true" @enderror class="form-control @error('phones.'. $key ) is-invalid @enderror">
@@ -105,7 +105,7 @@
                             {{-- birth --}}
                             <div class="form-group">
                                 <label for="birth">birth</label>
-                                <input type="date" id="birth" wire:model="birth" placeholder="birth" aria-describedby="birth-error" aria-required="true" @error('birth') aria-invalid="true" @enderror class="form-control @error('birth') is-invalid @enderror">
+                                <input  x-validate.required type="date" x-validate.date.dd.mm.yyyy id="birth" wire:model="birth" placeholder="birth" aria-describedby="birth-error" aria-required="true" @error('birth') aria-invalid="true" @enderror class="form-control @error('birth') is-invalid @enderror">
                                 {{-- Display name validation error message --}}
                                 @error('birth')
                                 <span id="birth-error" class="text-danger">{{ $message }}</span>
@@ -195,20 +195,26 @@
                             </script>
 
 
-                            <div class="form-check">
-                                <input x-model="submit" class="form-check-input" type="checkbox" value="" id="checkbox" wire:model="checkbox" aria-describedby="checkbox-error" aria-required="true" @error('checkbox') aria-invalid="true" @enderror class="form-control @error('checkbox') is-invalid @enderror">
-                                <label class="form-check-label" for="checkbox">
-                                    Я ознакомился c правилами
-                                </label>
-                                @error('checkbox')
-                                <br>
-                                <span id="checkbox-error" class="text-danger">{{ $message }}</span>
-                                @enderror
+                            <div class="form-check form-group">
+                                <div>
+                                    <label class="form-check-label" for="checkbox">
+                                        Я ознакомился c правилами
+                                    </label>
+                                    <input x-validate.group="1" class="form-check-input" type="checkbox" value="" id="checkbox" wire:model="checkbox" aria-describedby="checkbox-error" aria-required="true" @error('checkbox') aria-invalid="true" @enderror class="form-control @error('checkbox') is-invalid @enderror">
+
+                                    @error('checkbox')
+                                    <br>
+                                    <span id="checkbox-error" class="text-danger">{{ $message }}</span>
+                                    @enderror
+
+                                </div>
+
                             </div>
 
-                            <br>
+
                             <div class="form-group mb-2">
-                                <button type="submit" class="btn btn-primary" x-bind:disabled="!submit">Submit</button>
+                                <br>
+                                <button type="submit" class="btn btn-primary" :disabled="!$validate.isComplete('formId')">Submit</button>
                             </div>
 
                         </div>
