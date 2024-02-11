@@ -31,7 +31,7 @@ class CreateCustomer extends Component
     public string $birth;
     public string $status = '';
     public string $about = '';
-    public $files;
+    public $files = [];
     public array $phones = [''];
 
 
@@ -53,13 +53,13 @@ class CreateCustomer extends Component
 
     ];
 
-    #[Renderless]
+//    #[Renderless]
     public function updated($property)
     {
         $this->validateOnly($property);
     }
 
-    #[Renderless]
+//    #[Renderless]
     public function updatedFiles()
     {
         $this->dispatch('updatedFiles');
@@ -75,13 +75,13 @@ class CreateCustomer extends Component
         return $rules;
     }
 
-    #[Renderless]
+//    #[Renderless]
     public function addPhone(): void {
         $this->dispatch('contentChangedPhone');
         count($this->phones) < 5? $this->phones[] = '' :'';
     }
 
-    #[Renderless]
+//    #[Renderless]
     public function save()
     {
         $this->dispatch('saveCustomer');
@@ -122,11 +122,7 @@ class CreateCustomer extends Component
             $customer->familyStatus()->save($status);
         }
 
-
-
-
-//        return redirect()->to('/customer')
-//            ->with('status', 'Успешно');
+        $this->dispatch('saveCustomerSuccessfully');
     }
 
 
