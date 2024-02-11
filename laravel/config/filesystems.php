@@ -36,6 +36,18 @@ return [
             'throw' => false,
         ],
 
+        'fake_avatars' => [
+            'driver' => 'local',
+            'root' => storage_path('app/fake_avatars'),
+            'throw' => false,
+        ],
+
+        'customer_file' => [
+            'driver' => 'local',
+            'root' => storage_path('app/customer_file'),
+            'throw' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

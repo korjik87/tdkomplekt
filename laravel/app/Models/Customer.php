@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -17,15 +17,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property mixed $name
  * @property string $surname
  * @property string $patronymic
- * @method static \Illuminate\Database\Eloquent\Builder|Customer newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Customer newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Customer query()
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer wherePatronymic($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereSurname($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
+ * @method static Builder|Customer newModelQuery()
+ * @method static Builder|Customer newQuery()
+ * @method static Builder|Customer query()
+ * @method static Builder|Customer whereCreatedAt($value)
+ * @method static Builder|Customer whereId($value)
+ * @method static Builder|Customer whereName($value)
+ * @method static Builder|Customer wherePatronymic($value)
+ * @method static Builder|Customer whereSurname($value)
+ * @method static Builder|Customer whereUpdatedAt($value)
  * @property-read \App\Models\AboutMe|null $aboutMe
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerFile> $customerFiles
  * @property-read int|null $customer_files_count

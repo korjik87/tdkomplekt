@@ -5,6 +5,8 @@ namespace Tests\Feature\Livewire;
 use App\Livewire\CreateCustomer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -76,7 +78,7 @@ class CreateCustomerTest extends TestCase
             ->set('checkbox', true)
             ->errors();
 
-        dump($d);
+//        dump($d);
 
         $d = Livewire::test(CreateCustomer::class)
             ->set('name', fake()->firstName())
@@ -94,5 +96,23 @@ class CreateCustomerTest extends TestCase
 
         dump($d);
 
+    }
+
+    /** @test */
+    public function can_upload_photo()
+    {
+
+        $file = fake()->image(storage_path("app/fake_avatars"));
+        dump($file);
+
+        $l = Livewire::test(CreateCustomer::class)
+            ->set('name', fake()->firstName())
+            ->set('surname', fake()->lastName())
+            ->set('files', [$file])
+            ->call('save');
+
+        dump($l->errors());
+
+//        Storage::disk('app/datafake_avatars')->assertExists('uploaded-avatar.png');
     }
 }
