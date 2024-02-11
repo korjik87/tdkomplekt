@@ -40,7 +40,7 @@ class CustomerFile extends Model
     private Storage|Filesystem|null $disk = null;
 
 
-    public function __construct($attributes, UploadedFile|TemporaryUploadedFile $uploadedFile = null, $disk = 'customer_file')
+    public function __construct($attributes = [], UploadedFile|TemporaryUploadedFile $uploadedFile = null, $disk = 'customer_file')
     {
         parent::__construct($attributes);
 

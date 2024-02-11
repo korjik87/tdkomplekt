@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Livewire;
 
+use App\Enums\FamilyStatusEnum;
 use App\Livewire\CreateCustomer;
 use App\Models\Customer;
 use App\Models\Email;
+use App\Models\FamilyStatus;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportTesting\Testable;
@@ -254,8 +256,8 @@ class CreateCustomerTest extends TestCase
     public function can_set_data_in_db()
     {
 
-
         $name =  fake()->firstName();
+        $file1 = UploadedFile::fake()->image('image_1.jpg');
         $faker = Livewire::test(CreateCustomer::class)
             ->set('name', $name)
             ->set('surname', fake()->lastName())
@@ -263,7 +265,9 @@ class CreateCustomerTest extends TestCase
             ->set('checkbox', true)
             ->set('email', fake()->email())
             ->set('about', fake()->text())
+            ->set('status', 'single')
             ->set('phones', [fake()->e164PhoneNumber(), fake()->e164PhoneNumber()])
+            ->set('files', [$file1])
             ->call('save');
 
         $faker->assertHasNoErrors();
@@ -283,7 +287,10 @@ class CreateCustomerTest extends TestCase
         $this->assertCount($customer->phones()->count(), $faker->get('phones'));
         $this->assertTrue($customer->phones()->firstWhere('phone', $faker->get('phones')[0])->phone === $faker->get('phones')[0]);
 
+        $this->assertInstanceOf(FamilyStatus::class, $customer->familyStatus);
+        $this->assertTrue('single' === $customer->familyStatus->status->value);
 
+        $this->assertCount($customer->customerFiles()->count(), [$file1]);
 
 
 

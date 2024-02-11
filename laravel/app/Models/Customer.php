@@ -2,18 +2,21 @@
 
 namespace App\Models;
 
+use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Customer
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property mixed $name
  * @property string $surname
  * @property string $patronymic
@@ -26,15 +29,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder|Customer wherePatronymic($value)
  * @method static Builder|Customer whereSurname($value)
  * @method static Builder|Customer whereUpdatedAt($value)
- * @property-read \App\Models\AboutMe|null $aboutMe
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerFile> $customerFiles
+ * @property-read AboutMe|null $aboutMe
+ * @property-read Collection<int, CustomerFile> $customerFiles
  * @property-read int|null $customer_files_count
- * @property-read \App\Models\DateOfBirth|null $dateOfBirth
- * @property-read \App\Models\Email|null $email
- * @property-read \App\Models\FamilyStatus|null $familyStatus
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Phone> $phones
+ * @property-read DateOfBirth|null $dateOfBirth
+ * @property-read Email|null $email
+ * @property-read FamilyStatus|null $familyStatus
+ * @property-read Collection<int, \App\Models\Phone> $phones
  * @property-read int|null $phones_count
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Customer extends Model
 {
