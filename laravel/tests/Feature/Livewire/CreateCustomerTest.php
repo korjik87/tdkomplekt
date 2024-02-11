@@ -295,6 +295,7 @@ class CreateCustomerTest extends TestCase
         $this->assertTrue($customer->customerFiles()->first()->getDisc->exists($customer->customerFiles()->first()->pathToFile));
 
 
+        $this->assertCount($customer->customerFiles()->count(), [$file1]);
 
 
 
