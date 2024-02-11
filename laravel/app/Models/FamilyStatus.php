@@ -26,7 +26,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|FamilyStatus whereStatus($value)
  * @method static Builder|FamilyStatus whereUpdatedAt($value)
  * @mixin Eloquent
- * @mixin \Eloquent
  */
 class FamilyStatus extends Model
 {
