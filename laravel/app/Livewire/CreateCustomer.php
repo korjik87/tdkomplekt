@@ -6,6 +6,7 @@ use App\Enums\FamilyStatusEnum;
 use App\Models\AboutMe;
 use App\Models\Customer;
 use App\Models\CustomerFile;
+use App\Models\DateOfBirth;
 use App\Models\Email;
 use App\Models\FamilyStatus;
 use App\Models\Phone;
@@ -27,7 +28,7 @@ class CreateCustomer extends Component
     public string $checkbox;
     public string $surname = '';
     public string $patronymic = '';
-    public string $email;
+    public string $email = '';
     public string $birth;
     public string $status = '';
     public string $about = '';
@@ -38,17 +39,24 @@ class CreateCustomer extends Component
     public $title = 'Create сustomer...';
 
     protected array $rules = [
-        'name' => 'required|min:6',
-        'surname' => 'required|min:6',
-        'patronymic' => 'nullable|min:6',
-        'email' => 'required_without:phones|nullable|email',
-        'phones' => 'required_without:email|nullable|array|max:5',
+        'name' => 'required|min:3',
+        'surname' => 'required|min:3',
+        'patronymic' => 'nullable|min:3',
+        'email' => [
+            'required_if_accepted:phones',
+            'nullable',
+            'email'],
+        'phones' => ['required_without:email', 'nullable','array','max:5'],
 //        'phones' => 'array|max:5',
-        'phones.*' => 'max:20|nullable',
+//        'phones.*' => 'max:20|nullable|distinct|regex:/^\+[1-9]\d{1,14}$/|min:10',
+        'phones.*' => ['max:20','nullable','distinct',
+            ['regex','/^\+[1-9]\d{1,14}$/'],
+            ['min','10']
+        ],
         'birth' => 'required|date',
         'about' => 'max:1000',
         "files" => "array|max:5|nullable",
-        'files.*' => 'max:5126|mimes:png,jpg,pdf|nullable',
+        'files.*' => ['max:5126','mimes:png,jpg,pdf'],
         'checkbox' => 'required|boolean'
 
     ];
@@ -120,6 +128,11 @@ class CreateCustomer extends Component
         if($this->status) {
             $status =  new FamilyStatus($this->only(['status']));
             $customer->familyStatus()->save($status);
+        }
+
+        if($this->birth) {
+            $status =  new DateOfBirth($this->only('birth'));
+            $customer->dateOfBirth()->save($status);
         }
 
         $this->dispatch('saveCustomerSuccessfully');
