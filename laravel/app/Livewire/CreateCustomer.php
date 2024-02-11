@@ -41,14 +41,14 @@ class CreateCustomer extends Component
         'name' => 'required|min:6',
         'surname' => 'required|min:6',
         'patronymic' => 'min:6',
-        'email' => 'required_without:phones.*|email',
-//        'phones' => 'required_without:email|array|max:5',
-        'phones' => 'array|max:5',
-        'phones.*' => 'max:20',
+        'email' => 'required_without:phones|nullable|email',
+        'phones' => 'required_without:email|nullable|array|max:5',
+//        'phones' => 'array|max:5',
+        'phones.*' => 'max:20|nullable',
         'birth' => 'required|date',
         'about' => 'max:1000',
-        "files" => "array|max:5",
-        'files.*' => 'max:5126|mimes:png,jpg,pdf',
+        "files" => "array|max:5|nullable",
+        'files.*' => 'max:5126|mimes:png,jpg,pdf|nullable',
         'checkbox' => 'required|boolean'
 
     ];

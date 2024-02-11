@@ -62,7 +62,7 @@
                                 <label >phone: </label><button type="button" class="btn btn-secondary btn-sm" wire:click="addPhone" id="add">+</button>
                                 @foreach ($this->phones as $key => $item)
                                     <div>
-                                        <input  type="tel" id="phones{{ $key }}" wire:model="phones.{{ $key }}" placeholder="phone {{ $key }}" aria-describedby="phones.{{ $key }}-error" aria-required="true" @error('phones.'. $key ) aria-invalid="true" @enderror class="form-control @error('phones.'. $key ) is-invalid @enderror">
+                                        <input  type="tel" id="phones.{{ $key }}" wire:model="phones.{{ $key }}" placeholder="phone {{ $key }}" aria-describedby="phones.{{ $key }}-error" aria-required="true" @error('phones.'. $key ) aria-invalid="true" @enderror class="form-control @error('phones.'. $key ) is-invalid @enderror">
                                     </div>
                                     @error('phones.' .  $key)
                                     <span id="phones.{{ $key }}-error" class="text-danger">{{ $message }}</span>
@@ -121,11 +121,29 @@
                                 <label for="files">files</label>
                                 <input wire:model="files" type="file" id="files" accept="image/png, image/jpeg, application/pdf" multiple  placeholder="files" aria-describedby="files-error" aria-required="true" @error('files') aria-invalid="true" @enderror class="form-control @error('files') is-invalid @enderror">
                                 {{-- Display name validation error message --}}
-                                @error('files')
+                                @error('files.*')
                                 <span id="files-error" class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
 
+                            <script>
+                                const uploadField = document.getElementById("files");
+
+                                function uploadFieldChange() {
+                                    uploadField.onchange = function() {
+                                        if(this.files[0].size > (1048576 * 5)){
+                                            alert("File is too big!");
+                                            this.value = "";
+                                        }
+                                    }
+                                }
+                                uploadFieldChange();
+                                window.addEventListener('contentChangedPhone', uploadFieldChange);
+                                window.addEventListener('saveCustomer', uploadFieldChange);
+                                window.addEventListener('updatedFiles', uploadFieldChange);
+
+
+                            </script>
 
 
 
