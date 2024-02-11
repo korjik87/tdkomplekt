@@ -49,7 +49,7 @@
                             {{-- email --}}
                             <div class="form-group">
                                 <label for="email">email</label>
-                                <input x-validate.email type="email" id="email" wire:model="email" placeholder="email" aria-describedby="email-error" aria-required="true" @error('email') aria-invalid="true" @enderror class="form-control @error('email') is-invalid @enderror">
+                                <input x-validate.email type="email" x-ref="email" id="email" wire:model="email" placeholder="email" aria-describedby="email-error" aria-required="true" @error('email') aria-invalid="true" @enderror class="form-control @error('email') is-invalid @enderror">
                                 {{-- Display name validation error message --}}
                                 @error('email')
                                 <span id="email-error" class="text-danger">{{ $message }}</span>
@@ -59,10 +59,10 @@
 
                             {{-- phones --}}
                             <div class="form-group">
-                                <label x-validate.tel>phone: </label><button type="button" class="btn btn-secondary btn-sm" wire:click="addPhone" id="add">+</button>
+                                <label>phone: </label><button type="button" class="btn btn-secondary btn-sm" wire:click="addPhone" id="add">+</button>
                                 @foreach ($this->phones as $key => $item)
                                     <div>
-                                        <input  type="tel" id="phones.{{ $key }}" wire:model="phones.{{ $key }}" placeholder="phone {{ $key }}" aria-describedby="phones.{{ $key }}-error" aria-required="true" @error('phones.'. $key ) aria-invalid="true" @enderror class="form-control @error('phones.'. $key ) is-invalid @enderror">
+                                        <input type="tel" id="phones.{{ $key }}" wire:model="phones.{{ $key }}" placeholder="phone {{ $key }}" aria-describedby="phones.{{ $key }}-error" aria-required="true" @error('phones.'. $key ) aria-invalid="true" @enderror class="form-control @error('phones.'. $key ) is-invalid @enderror">
                                     </div>
                                     @error('phones.' .  $key)
                                     <span id="phones.{{ $key }}-error" class="text-danger">{{ $message }}</span>
@@ -214,7 +214,7 @@
 
                             <div class="form-group mb-2">
                                 <br>
-                                <button type="submit" class="btn btn-primary" :disabled="!$validate.isComplete('formId')">Submit</button>
+                                <button type="submit" class="btn btn-primary" :disabled="!($validate.isComplete('formId'))">Submit</button>
                             </div>
 
                         </div>

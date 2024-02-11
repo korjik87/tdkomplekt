@@ -26,8 +26,8 @@ class CreateCustomer extends Component
     public string $name = '';
     public string $checkbox;
     public string $surname = '';
-    public string $patronymic;
-    public string $email = '';
+    public string $patronymic = '';
+    public string $email;
     public string $birth;
     public string $status = '';
     public string $about = '';
@@ -40,7 +40,7 @@ class CreateCustomer extends Component
     protected array $rules = [
         'name' => 'required|min:6',
         'surname' => 'required|min:6',
-        'patronymic' => 'min:6',
+        'patronymic' => 'nullable|min:6',
         'email' => 'required_without:phones|nullable|email',
         'phones' => 'required_without:email|nullable|array|max:5',
 //        'phones' => 'array|max:5',
@@ -81,7 +81,7 @@ class CreateCustomer extends Component
         count($this->phones) < 5? $this->phones[] = '' :'';
     }
 
-//    #[Renderless]
+    #[Renderless]
     public function save()
     {
         $this->dispatch('saveCustomer');
