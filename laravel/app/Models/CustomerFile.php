@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static Builder|CustomerFile whereId($value)
  * @method static Builder|CustomerFile whereUpdatedAt($value)
  * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class CustomerFile extends Model
 {
