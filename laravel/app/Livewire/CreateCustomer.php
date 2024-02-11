@@ -34,6 +34,7 @@ class CreateCustomer extends Component
     public string $about = '';
     public $files = [];
     public array $phones = [''];
+    private Customer|null $customer;
 
 
     public $title = 'Create сustomer...';
@@ -96,46 +97,54 @@ class CreateCustomer extends Component
         $this->validate($this->rules());
 
 
-        $customer = Customer::create($this->only(['name', 'surname', 'patronymic']));
+        $this->customer = Customer::create($this->only(['name', 'surname', 'patronymic']));
 
-        if($this->email) {
-            $email =  new Email($this->only(['email']));
-            $customer->email()->save($email);
-        }
-
-
-        $phones = [];
-        foreach ($this->phones as $item) {
-            if($item) {
-                $phones[] =  new Phone(['phone' => $item]);
+        if($this->customer instanceof Customer) {
+            if($this->email) {
+                $email =  new Email($this->only(['email']));
+                $this->customer->email()->save($email);
             }
+
+
+            $phones = [];
+            foreach ($this->phones as $item) {
+                if($item) {
+                    $phones[] =  new Phone(['phone' => $item]);
+                }
+            }
+            if($phones) {
+                $this->customer->phones()->saveMany($phones);
+            }
+
+
+
+            foreach ($this->files as $item) {
+                (new CustomerFile(['customer_id' => $this->customer->getKey()], $item))->save();
+            }
+
+            if($this->about) {
+                $about =  new AboutMe($this->only(['about']));
+                $this->customer->aboutMe()->save($about);
+            }
+
+            if($this->status) {
+                $status =  new FamilyStatus($this->only(['status']));
+                $this->customer->familyStatus()->save($status);
+            }
+
+            if($this->birth) {
+                $status =  new DateOfBirth($this->only('birth'));
+                $this->customer->dateOfBirth()->save($status);
+            }
+
+            $this->dispatch('saveCustomerSuccessfully');
         }
-        if($phones) {
-            $customer->phones()->saveMany($phones);
-        }
 
 
+    }
 
-        foreach ($this->files as $item) {
-            (new CustomerFile(['customer_id' => $customer->getKey()], $item))->save();
-        }
+    public function saveTest() {
 
-        if($this->about) {
-            $about =  new AboutMe($this->only(['about']));
-            $customer->aboutMe()->save($about);
-        }
-
-        if($this->status) {
-            $status =  new FamilyStatus($this->only(['status']));
-            $customer->familyStatus()->save($status);
-        }
-
-        if($this->birth) {
-            $status =  new DateOfBirth($this->only('birth'));
-            $customer->dateOfBirth()->save($status);
-        }
-
-        $this->dispatch('saveCustomerSuccessfully');
     }
 
 

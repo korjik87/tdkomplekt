@@ -3,7 +3,10 @@
 namespace Tests\Feature\Livewire;
 
 use App\Livewire\CreateCustomer;
+use App\Models\Customer;
+use App\Models\Email;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -215,11 +218,83 @@ class CreateCustomerTest extends TestCase
     }
 
 
+        /** @test */
+    public function can_set_about()
+    {
+
+
+        $this->fakerValidWithEmail()
+            ->set('about', Str::random(1001))
+            ->call('save')
+            ->assertHasErrors();
+
+    }
+
+
+        /** @test */
+    public function can_set_name()
+    {
+
+
+        $this->fakerValidWithEmail()
+            ->set('name', '')
+            ->call('save')
+            ->assertHasErrors();
+
+        $this->fakerValidWithEmail()
+            ->set('surname', '')
+            ->call('save')
+            ->assertHasErrors();
+
+    }
+
+
+
+    /** @test */
+    public function can_set_data_in_db()
+    {
+
+
+        $name =  fake()->firstName();
+        $faker = Livewire::test(CreateCustomer::class)
+            ->set('name', $name)
+            ->set('surname', fake()->lastName())
+            ->set('birth', fake()->date())
+            ->set('checkbox', true)
+            ->set('email', fake()->email())
+            ->set('about', fake()->text())
+            ->set('phones', [fake()->e164PhoneNumber(), fake()->e164PhoneNumber()])
+            ->call('save');
+
+        $faker->assertHasNoErrors();
+
+        $customer = Customer::orderBy('id', 'desc')->first();
+        $this->assertInstanceOf(Customer::class, $customer);
+
+
+
+
+        $this->assertTrue($faker->get('name') === $customer->name);
+        $this->assertTrue($faker->get('surname') === $customer->surname);
+        $this->assertTrue($faker->get('patronymic') === $customer->patronymic);
+        $this->assertInstanceOf(Email::class, $customer->email);
+        $this->assertTrue($faker->get('email') === $customer->email->email);
+
+        $this->assertCount($customer->phones()->count(), $faker->get('phones'));
+        $this->assertTrue($customer->phones()->firstWhere('phone', $faker->get('phones')[0])->phone === $faker->get('phones')[0]);
+
+
+
+
+
+    }
+
+
     /** @test */
     public function can_upload_photo()
     {
 
-        $file1 =  UploadedFile::fake()->image('image_1.jpg');
+        $file1 = UploadedFile::fake()->image('image_1.jpg');
         $file2 = UploadedFile::fake()->image('image_2.png');
         $file3 = UploadedFile::fake()->image('image_3.pdf');
         $file4 = UploadedFile::fake()->image('image_4.jpg');
@@ -290,7 +365,6 @@ class CreateCustomerTest extends TestCase
 
         $p = fake()->e164PhoneNumber();
 
-//        dump($p);
         return $this->blank()
             ->set('phones', [$p]);
 
