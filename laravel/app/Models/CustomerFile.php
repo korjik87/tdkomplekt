@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use JetBrains\PhpStorm\NoReturn;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
 
 
 /**
@@ -31,6 +33,7 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
  * @method static Builder|CustomerFile whereId($value)
  * @method static Builder|CustomerFile whereUpdatedAt($value)
  * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class CustomerFile extends Model
 {
@@ -47,8 +50,8 @@ class CustomerFile extends Model
         $this->uploadedFile = $uploadedFile;
         if($uploadedFile) {
             $this->filename = $uploadedFile->getClientOriginalName();
-            $this->disk = Storage::disk($disk);
         }
+        $this->disk = Storage::disk($disk);
 
     }
 
@@ -64,10 +67,27 @@ class CustomerFile extends Model
 
     #[NoReturn] protected function storeToDisk()
     {
-        $out = $this->customer_id . '/' . $this->filename;
+        $out = $this->pathToFile;
         $this->disk->put(
             $out,
             file_get_contents($this->uploadedFile->getRealPath())
         );
     }
+
+    protected function pathToFile(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value,  array $attributes) => $attributes['customer_id'] . '/' .  $attributes['filename'],
+        );
+    }
+
+    protected function getDisc(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value,  array $attributes) => $this->disk,
+        );
+    }
+
+
+
 }

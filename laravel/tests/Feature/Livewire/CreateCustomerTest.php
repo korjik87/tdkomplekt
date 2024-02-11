@@ -291,6 +291,10 @@ class CreateCustomerTest extends TestCase
         $this->assertTrue('single' === $customer->familyStatus->status->value);
 
         $this->assertCount($customer->customerFiles()->count(), [$file1]);
+        $this->assertTrue($customer->customerFiles()->first()->filename === $file1->name);
+        $this->assertTrue($customer->customerFiles()->first()->getDisc->exists($customer->customerFiles()->first()->pathToFile));
+
+
 
 
 

@@ -38,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, \App\Models\Phone> $phones
  * @property-read int|null $phones_count
  * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class Customer extends Model
 {
