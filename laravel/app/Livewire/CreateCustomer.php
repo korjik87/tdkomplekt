@@ -3,19 +3,10 @@
 namespace App\Livewire;
 
 use App\Enums\FamilyStatusEnum;
-use App\Models\AboutMe;
-use App\Models\Customer;
-use App\Models\CustomerFile;
-use App\Models\DateOfBirth;
-use App\Models\Email;
-use App\Models\FamilyStatus;
-use App\Models\Phone;
-use Illuminate\Contracts\View\Factory;
+use App\Models\{AboutMe, Customer, CustomerFile, DateOfBirth, Email, FamilyStatus, Phone};
 use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-use Livewire\Attributes\Renderless;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -23,133 +14,123 @@ class CreateCustomer extends Component
 {
     use WithFileUploads;
 
-    #[Validate('required')]
+    // Основные данные
     public string $name = '';
-    public string $checkbox;
     public string $surname = '';
     public string $patronymic = '';
-    public string $email;
-    public string $birth;
+    public string $checkbox;
+
+    // Контактная информация
+    public string $email = '';
+    public string $birth = '';
     public string $status = '';
     public string $about = '';
-    public $files = [];
+    public array $files = [];
     public array $phones = [''];
-    private Customer|null $customer;
 
+    public string $title = 'Create customer...';
 
-    public $title = 'Create сustomer...';
-
-    protected array $rules = [
-        'name' => 'required|min:3',
-        'surname' => 'required|min:3',
-        'patronymic' => 'nullable|min:3',
-        'email' => [
-            'required_if_accepted:phones',
-            'nullable',
-            'email'],
-        'phones' => ['required_without:email', 'nullable','array','max:5'],
-//        'phones' => 'array|max:5',
-//        'phones.*' => 'max:20|nullable|distinct|regex:/^\+[1-9]\d{1,14}$/|min:10',
-        'phones.*' => ['max:20','nullable','distinct',
-            ['regex','/^\+[1-9]\d{1,14}$/'],
-            ['min','10']
-        ],
-        'birth' => 'required|date',
-        'about' => 'max:1000',
-        "files" => "array|max:5|nullable",
-        'files.*' => ['max:5126','mimes:png,jpg,pdf'],
-        'checkbox' => 'required|boolean'
-
-    ];
-
-//    #[Renderless]
-    public function updated($property)
+    public function rules(): array
     {
-        $this->validateOnly($property);
+        return [
+            'name' => 'required|min:3',
+            'surname' => 'required|min:3',
+            'patronymic' => 'nullable|min:3',
+            'checkbox' => 'required|boolean',
+            'email' => [
+                Rule::requiredIf(empty(array_filter($this->phones))),
+                'nullable',
+                'email'
+            ],
+            'birth' => 'required|date',
+            'status' => [Rule::enum(FamilyStatusEnum::class)],
+            'about' => 'nullable|max:1000',
+            'files' => 'array|max:5',
+            'files.*' => 'max:5126|mimes:png,jpg,pdf',
+            'phones' => ['required_without:email', 'array', 'max:5'],
+            'phones.*' => [
+                'nullable',
+                'distinct',
+                'min:10',
+                'max:20',
+                'regex:/^\+[1-9]\d{1,14}$/'
+            ],
+        ];
     }
 
-//    #[Renderless]
-    public function updatedFiles()
+    public function addPhone(): void
     {
-        $this->dispatch('updatedFiles');
-        $this->validate($this->rules());
-
-        // here you can store immediately on any change of the property
+        if (count($this->phones) < 5) {
+            $this->phones[] = '';
+            $this->dispatch('phone-field-added');
+        }
     }
 
-    public function rules(): array {
-        $rules = $this->rules;
-        $rules['status'] = [Rule::enum(FamilyStatusEnum::class)];
-
-        return $rules;
-    }
-
-//    #[Renderless]
-    public function addPhone(): void {
-        $this->dispatch('contentChangedPhone');
-        count($this->phones) < 5? $this->phones[] = '' :'';
-    }
-
-    #[Renderless]
-    public function save()
+    public function save(): void
     {
-        $this->dispatch('saveCustomer');
-        $this->validate($this->rules());
+        $this->validate();
 
+        DB::transaction(function () {
+            $customer = Customer::create([
+                'name' => $this->name,
+                'surname' => $this->surname,
+                'patronymic' => $this->patronymic,
+            ]);
 
-        $this->customer = Customer::create($this->only(['name', 'surname', 'patronymic']));
+            $this->saveContactInfo($customer);
+            $this->saveAdditionalInfo($customer);
+            $this->handleFiles($customer);
+        });
 
-        if($this->customer instanceof Customer) {
-            if($this->email) {
-                $email =  new Email($this->only(['email']));
-                $this->customer->email()->save($email);
-            }
+        $this->dispatch('customer-created');
+        $this->resetForm();
+    }
 
-
-            $phones = [];
-            foreach ($this->phones as $item) {
-                if($item) {
-                    $phones[] =  new Phone(['phone' => $item]);
-                }
-            }
-            if($phones) {
-                $this->customer->phones()->saveMany($phones);
-            }
-
-
-
-            foreach ($this->files as $item) {
-                (new CustomerFile(['customer_id' => $this->customer->getKey()], $item))->save();
-            }
-
-            if($this->about) {
-                $about =  new AboutMe($this->only(['about']));
-                $this->customer->aboutMe()->save($about);
-            }
-
-            if($this->status) {
-                $status =  new FamilyStatus($this->only(['status']));
-                $this->customer->familyStatus()->save($status);
-            }
-
-            if($this->birth) {
-                $status =  new DateOfBirth($this->only('birth'));
-                $this->customer->dateOfBirth()->save($status);
-            }
-
-            $this->dispatch('saveCustomerSuccessfully');
+    protected function saveContactInfo(Customer $customer): void
+    {
+        if ($this->email) {
+            $customer->email()->save(new Email(['email' => $this->email]));
         }
 
-
+        $phones = array_filter($this->phones);
+        if (!empty($phones)) {
+            $customer->phones()->saveMany(
+                collect($phones)->map(fn ($phone) => new Phone(['phone' => $phone]))
+            );
+        }
     }
 
-    public function saveTest() {
+    protected function saveAdditionalInfo(Customer $customer): void
+    {
+        $customer->dateOfBirth()->save(new DateOfBirth(['birth' => $this->birth]));
 
+        if ($this->status) {
+            $customer->familyStatus()->save(new FamilyStatus(['status' => $this->status]));
+        }
+
+        if ($this->about) {
+            $customer->aboutMe()->save(new AboutMe(['about' => $this->about]));
+        }
     }
 
+    protected function handleFiles(Customer $customer): void
+    {
+        foreach ($this->files as $file) {
+            $path = $file->store('customer_files', 'public');
+            $customer->files()->create(['path' => $path]);
+        }
+    }
 
+    protected function resetForm(): void
+    {
+        $this->reset([
+            'name', 'surname', 'patronymic', 'email', 'birth',
+            'status', 'about', 'files', 'phones'
+        ]);
+        $this->phones = [''];
+    }
 
-    public function render(): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
+    public function render(): View
     {
         return view('livewire.create-customer');
     }
